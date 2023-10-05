@@ -1,0 +1,93 @@
+import { View, Text, Button, TextInput ,StyleSheet} from 'react-native';
+import { useUnidade } from './contexts/contextsUnidade'; 
+import { Picker } from '@react-native-picker/picker';
+import React, { useEffect } from 'react';
+
+
+const unidadesVolume = [
+  { nome: 'Litro', abreviacao: 'L' },
+  { nome: 'Mililitro', abreviacao: 'mL' },
+  { nome: 'Galon', abreviacao: 'gal' },
+];
+
+export default function ConverterVolume({ navigation }) {
+  const { unidadeOrigem, setUnidadeOrigem, unidadeDestino, setUnidadeDestino, resultado, setResultado,Tipo,setTipo } = useUnidade();
+  const [valorEntrada, setValorEntrada] = React.useState('');
+
+ useEffect(() => {
+    // Defina as unidades padrão e o tipo quando a tela for montada
+    setUnidadeOrigem('L');
+    setUnidadeDestino('mL');
+    setTipo('3');
+  }, []);
+
+  const handleConversion = () => {
+    // Realize a conversão aqui
+    const valor = parseFloat(valorEntrada);
+    
+    if (!isNaN(valor)) {
+      // Navegue para a tela de resultado e envie as unidades escolhidas
+      navigation.navigate('Resultado', { Tipo, valor, unidadeOrigem, unidadeDestino });
+    }
+  };
+
+ 
+  return (
+    <View style={styles.container}>
+      <Text style={styles.label}>Selecione as unidades:</Text>
+      <Picker
+        style={styles.picker}
+        selectedValue={unidadeOrigem}
+        onValueChange={(itemValue) => setUnidadeOrigem(itemValue)}>
+        {unidadesVolume.map((unidade) => (
+          <Picker.Item key={unidade.abreviacao} label={unidade.nome} value={unidade.abreviacao} />
+        ))}
+      </Picker>
+      <Picker
+        style={styles.picker}
+        selectedValue={unidadeDestino}
+        onValueChange={(itemValue) => setUnidadeDestino(itemValue)}>
+        {unidadesVolume.map((unidade) => (
+          <Picker.Item key={unidade.abreviacao} label={unidade.nome} value={unidade.abreviacao} />
+        ))}
+      </Picker>
+      <TextInput
+        style={styles.input}
+        placeholder="Digite o valor"
+        keyboardType="numeric"
+        onChangeText={(text) => setValorEntrada(text)}
+      />
+      <Button title="Calcular" onPress={handleConversion} />
+      {resultado !== null && <Text style={styles.result}>Resultado: {resultado} {unidadeDestino}</Text>}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+  },
+  label: {
+    fontSize: 18,
+    marginBottom: 8,
+  },
+  picker: {
+    width: '100%',
+    marginBottom: 16,
+  },
+  input: {
+    width: '100%',
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    paddingHorizontal: 8,
+    marginBottom: 16,
+  },
+  result: {
+    fontSize: 18,
+    marginTop: 16,
+  },
+});
