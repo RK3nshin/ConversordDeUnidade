@@ -15,18 +15,15 @@ export default function ConverterVolume({ navigation }) {
   const [valorEntrada, setValorEntrada] = React.useState('');
 
  useEffect(() => {
-    // Defina as unidades padrão e o tipo quando a tela for montada
     setUnidadeOrigem('L');
     setUnidadeDestino('mL');
     setTipo('3');
   }, []);
 
   const handleConversion = () => {
-    // Realize a conversão aqui
     const valor = parseFloat(valorEntrada);
     
     if (!isNaN(valor)) {
-      // Navegue para a tela de resultado e envie as unidades escolhidas
       navigation.navigate('Resultado', { Tipo, valor, unidadeOrigem, unidadeDestino });
     }
   };
